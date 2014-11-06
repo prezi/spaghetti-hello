@@ -20,8 +20,8 @@ module.exports = function(grunt) {
         var opts = this.data,
             spec,
             compileCommand = {
-                "typescript": 'find . -name \'*.ts\' | xargs tsc --out ' + opts.name + '.js',
-                "haxe": "haxe -cp headers -cp src/main/haxe -js " + opts.name + ".js --macro \"include('" + opts.package + "')\"",
+                "typescript": 'find . -name \'*.ts\' | xargs tsc --out build/' + opts.name + '.js',
+                "haxe": "haxe -cp build/spaghetti/generated-headers -cp src/main/haxe -js build/" + opts.name + ".js --macro \"include('" + opts.package + "')\"",
                 "kotlin": "cd ..; ./kotlinc-js.sh " + opts.path + " " + opts.name
             };
 
@@ -31,8 +31,13 @@ module.exports = function(grunt) {
             config.exec = {};
         }
 
+        grunt.config("exec.Clean" + opts.name, {
+            command: "rm -rf build",
+            cwd: opts.path
+        });
+
         spec = {
-            command: "rm -rf headers && spaghetti generate headers --definition src/main/spaghetti/" + opts.name + ".module --language " + opts.language + " --output headers",
+            command: "spaghetti generate headers --definition src/main/spaghetti/" + opts.name + ".module --language " + opts.language + " --output build/spaghetti/generated-headers",
             cwd: opts.path
         };
         if (opts.hasOwnProperty("dependencies")) {
@@ -46,7 +51,7 @@ module.exports = function(grunt) {
         });
 
         spec = {
-            command: "spaghetti bundle --definition src/main/spaghetti/" + opts.name + ".module --language " + opts.language + " --source " + opts.name + ".js --output bundle",
+            command: "spaghetti bundle --definition src/main/spaghetti/" + opts.name + ".module --language " + opts.language + " --source build/" + opts.name + ".js --output bundle",
             cwd: opts.path
         };
         if (opts.hasOwnProperty("dependencies")) {
@@ -83,9 +88,6 @@ module.exports = function(grunt) {
                 package: "com.example.runner",
                 dependencies: ["../greeter-module", "../adder-module"]
             }
-        },
-        exec: {
-            clean: "rm -rf app {greeter,runner}-module/{*.js,bundle,headers}",
         }
     };
 

@@ -5,8 +5,8 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.prezi.spaghetti:gradle-spaghetti-typescript-plugin:2.0"
-		classpath "com.prezi.spaghetti:gradle-spaghetti-haxe-plugin:2.0"
+		classpath "com.prezi.spaghetti:gradle-spaghetti-typescript-plugin:2.1-alpha-2-SNAPSHOT"
+		classpath "com.prezi.spaghetti:gradle-spaghetti-haxe-plugin:2.1-alpha-2-SNAPSHOT"
 	}
 }
 
@@ -18,6 +18,38 @@ project(":greeter-module") {
 	apply plugin: "spaghetti-typescript"
 }
 
+project(":adder-module") {
+        apply plugin: "spaghetti"
+        
+	spaghetti {
+		language "kotlin"
+	}
+        
+	task compileKotlin(type: Exec) {
+		dependsOn generateHeaders
+		inputs.dir file("src/main/kotlin")
+		def outputFile = file("$buildDir/Adder.js")
+		ext.outputFile = outputFile
+		outputs.file outputFile
+                workingDir project.rootDir
+		commandLine "${project.rootDir}/kotlinc-js.sh", "adder-module", "Adder"
+	}
+
+	task bundleModule(type: com.prezi.spaghetti.gradle.BundleModule) {
+		dependsOn compileKotlin
+		inputFile compileKotlin.outputFile
+	}
+
+	task zipModule(type: Zip) {
+		dependsOn bundleModule
+		from bundleModule.outputDirectory
+	}
+
+	artifacts {
+		modules(zipModule)
+	}
+}
+
 project(":runner-module") {
 	apply plugin: "spaghetti-haxe"
 
@@ -26,7 +58,8 @@ project(":runner-module") {
 	}
 
 	dependencies {
-		modules project(path: ":greeter-module", configuration: "modules")		
+		modules project(path: ":greeter-module", configuration: "modules"),	
+		        project(path: ":adder-module", configuration: "modules")
 	}	
 }
 

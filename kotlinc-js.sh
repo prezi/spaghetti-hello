@@ -12,4 +12,4 @@ if [ ! -d kotlinc ]; then
     unzip kotlin-compiler-0.9.66.zip
 fi
 
-find . -name '*.kt' | xargs ./kotlinc/bin/kotlinc-js -output ./$module_name.js -library-files kotlinc/lib/kotlin-jslib.jar -nowarn -output-prefix kotlinc/lib/kotlin.js
+find . -name '*.kt' | xargs ./kotlinc/bin/kotlinc-js -output ./build/$module_name.js -library-files kotlinc/lib/kotlin-jslib.jar -nowarn -output-prefix kotlinc/lib/kotlin.js
