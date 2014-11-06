@@ -4,6 +4,7 @@ echo "Starting on greeter-module"
 cd greeter-module
 
 echo "[greeter-module] Generating headers"
+rm -rf headers
 spaghetti generate headers --definition Greeter.module --language typescript --output headers
 
 echo "[greeter-module] Compiling"
@@ -19,6 +20,7 @@ echo "Starting on runner-module"
 cd runner-module
 
 echo "[runner-module] Generating headers"
+rm -rf headers
 spaghetti generate headers --definition Runner.module --language haxe --dependency-path ../greeter-module/bundle --output headers
 
 echo "[runner-module] Compiling"
