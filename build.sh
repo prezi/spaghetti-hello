@@ -28,7 +28,7 @@ cd adder-module
 
 echo "[adder-module] Generating headers"
 rm -rf headers
-spaghetti generate headers --definition Adder.module --language kotlin --output headers
+spaghetti generate headers --definition src/main/spaghetti/Adder.module --language kotlin --output headers
 
 echo "[adder-module] Compiling"
 cd ..
@@ -36,7 +36,7 @@ cd ..
 cd adder-module
 
 echo "[adder-module] Bundling"
-spaghetti bundle --definition Adder.module --language kotlin --source Adder.js --output bundle
+spaghetti bundle --definition src/main/spaghetti/Adder.module --language kotlin --source Adder.js --output bundle
 
 echo "Done with adder-module"
 cd ..
