@@ -21,6 +21,9 @@ function spaghettiTaskSet(config, opts) {
         "haxe": "haxe -cp headers -cp src -js " + opts.name + ".js --macro \"include('" + opts.package + "')\""
     }
 
+    spaghettiTaskSet.modulePaths.push(opts.path);
+    spaghettiTaskSet.moduleNames.push(opts.name);
+
     if (!config.hasOwnProperty('exec')) {
         config.exec = {};
     }
@@ -44,12 +47,18 @@ function spaghettiTaskSet(config, opts) {
     exec["Bundle" + opts.name] = {
         command: "spaghetti bundle --definition " + opts.name + ".module --language " + opts.language + " --source " + opts.name + ".js --output bundle",
         cwd: opts.path
-    }
+    };
     if (opts.hasOwnProperty("dependencies")) {
         for (var i = 0; i < opts.dependencies.length; i++) {
             exec["Bundle" + opts.name].command += " -d " + opts.dependencies[i] + "/bundle";
         }
     }
+}
+spaghettiTaskSet.modulePaths = [];
+spaghettiTaskSet.moduleNames = [];
+
+spaghettiTaskSet.package = function(config) {
+    config.exec.SpaghettiPackage = 'spaghetti package --wrapper node --execute --main com.example.runner --output app --dependency-path ' + spaghettiTaskSet.modulePaths.map(function(p) { return p + "/bundle"; }).join(':');
 }
 
 // Actual project definition starts here
@@ -57,21 +66,22 @@ function spaghettiTaskSet(config, opts) {
 module.exports = function(grunt) {
     var config = {
         exec: {
-            clean: "rm -rf app {greeter,runner}-module/{*.js,bundle,headers}"
-        }
+            clean: "rm -rf app {greeter,runner}-module/{*.js,bundle,headers}",
+        },
+
     };
 
     spaghettiTaskSet(config, {
         name: "Greeter",
         path: "greeter-module",
         language: "typescript"});
-
     spaghettiTaskSet(config, {
         name: "Runner",
         path: "runner-module",
         language: "haxe",
         package: "com.example.runner",
         dependencies: ["../greeter-module"]});
+    spaghettiTaskSet.package(config);
 
     grunt.initConfig(config);
 
