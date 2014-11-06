@@ -1,0 +1,10 @@
+module com.example.adder
+
+/**
+ * Adds numbers!
+ */
+interface Adder {
+    int add(int a, int b)
+}
+
+Adder createAdder()

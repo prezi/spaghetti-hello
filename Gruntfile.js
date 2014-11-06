@@ -17,10 +17,12 @@ module.exports = function(grunt) {
      * TODO generate clean tasks
      */
     function spaghettiTaskSet() {
-        var opts = this.data, spec,
+        var opts = this.data,
+            spec,
             compileCommand = {
                 "typescript": 'find . -name \'*.ts\' | xargs tsc --out ' + opts.name + '.js',
-                "haxe": "haxe -cp headers -cp src/main/haxe -js " + opts.name + ".js --macro \"include('" + opts.package + "')\""
+                "haxe": "haxe -cp headers -cp src/main/haxe -js " + opts.name + ".js --macro \"include('" + opts.package + "')\"",
+                "kotlin": "cd ..; ./kotlinc-js.sh " + opts.path + " " + opts.name
             };
 
         spaghettiTaskSet.modulePaths.push(opts.path);
@@ -34,9 +36,7 @@ module.exports = function(grunt) {
             cwd: opts.path
         };
         if (opts.hasOwnProperty("dependencies")) {
-            for (var i = 0; i < opts.dependencies.length; i++) {
-                spec.command += " --dependency-path " + opts.dependencies[i] + "/bundle";
-            }
+            spec.command += " --dependency-path " + opts.dependencies.map(function (p) { return p + "/bundle"; }).join(':');
         }
         grunt.config("exec.Generate" + opts.name + "Headers", spec);
 
@@ -50,9 +50,7 @@ module.exports = function(grunt) {
             cwd: opts.path
         };
         if (opts.hasOwnProperty("dependencies")) {
-            for (var i = 0; i < opts.dependencies.length; i++) {
-                spec.command += " -d " + opts.dependencies[i] + "/bundle";
-            }
+            spec.command += " -d " + opts.dependencies.map(function (p) { return p + "/bundle"; }).join(':');
         }
         grunt.config("exec.Bundle" + opts.name, spec);
     }
@@ -73,12 +71,17 @@ module.exports = function(grunt) {
                 path: "greeter-module",
                 language: "typescript"
             },
+            adder: {
+                name: "Adder",
+                path: "adder-module",
+                language: "kotlin"
+            },
             runner: {
                 name: "Runner",
                 path: "runner-module",
                 language: "haxe",
                 package: "com.example.runner",
-                dependencies: ["../greeter-module"]
+                dependencies: ["../greeter-module", "../adder-module"]
             }
         },
         exec: {
