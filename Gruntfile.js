@@ -22,7 +22,6 @@ function spaghettiTaskSet(config, opts) {
     }
 
     spaghettiTaskSet.modulePaths.push(opts.path);
-    spaghettiTaskSet.moduleNames.push(opts.name);
 
     if (!config.hasOwnProperty('exec')) {
         config.exec = {};
@@ -55,7 +54,6 @@ function spaghettiTaskSet(config, opts) {
     }
 }
 spaghettiTaskSet.modulePaths = [];
-spaghettiTaskSet.moduleNames = [];
 
 spaghettiTaskSet.package = function(config) {
     config.exec.SpaghettiPackage = 'spaghetti package --wrapper node --execute --main com.example.runner --output app --dependency-path ' + spaghettiTaskSet.modulePaths.map(function(p) { return p + "/bundle"; }).join(':');
