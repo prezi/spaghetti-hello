@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         var opts = this.data, spec,
             compileCommand = {
                 "typescript": 'find . -name \'*.ts\' | xargs tsc --out ' + opts.name + '.js',
-                "haxe": "haxe -cp headers -cp src -js " + opts.name + ".js --macro \"include('" + opts.package + "')\""
+                "haxe": "haxe -cp headers -cp src/main/haxe -js " + opts.name + ".js --macro \"include('" + opts.package + "')\""
             };
 
         spaghettiTaskSet.modulePaths.push(opts.path);
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         }
 
         spec = {
-            command: "rm -rf headers && spaghetti generate headers --definition " + opts.name + ".module --language " + opts.language + " --output headers",
+            command: "rm -rf headers && spaghetti generate headers --definition src/main/spaghetti/" + opts.name + ".module --language " + opts.language + " --output headers",
             cwd: opts.path
         };
         if (opts.hasOwnProperty("dependencies")) {
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
         });
 
         spec = {
-            command: "spaghetti bundle --definition " + opts.name + ".module --language " + opts.language + " --source " + opts.name + ".js --output bundle",
+            command: "spaghetti bundle --definition src/main/spaghetti/" + opts.name + ".module --language " + opts.language + " --source " + opts.name + ".js --output bundle",
             cwd: opts.path
         };
         if (opts.hasOwnProperty("dependencies")) {

@@ -5,13 +5,13 @@ cd greeter-module
 
 echo "[greeter-module] Generating headers"
 rm -rf headers
-spaghetti generate headers --definition Greeter.module --language typescript --output headers
+spaghetti generate headers --definition src/main/spaghetti/Greeter.module --language typescript --output headers
 
 echo "[greeter-module] Compiling"
-tsc src/com/example/greeter/GreeterModuleImpl.ts headers/GreeterModule.ts headers/Spaghetti.ts --out Greeter.js
+tsc `find src/main/ts -name "*.ts"` `find headers -name "*.ts"` --out Greeter.js
 
 echo "[greeter-module] Bundling"
-spaghetti bundle --definition Greeter.module --language typescript --source Greeter.js --output bundle
+spaghetti bundle --definition src/main/spaghetti/Greeter.module --language typescript --source Greeter.js --output bundle
 
 echo "Done with greeter-module"
 cd ..
@@ -21,13 +21,13 @@ cd runner-module
 
 echo "[runner-module] Generating headers"
 rm -rf headers
-spaghetti generate headers --definition Runner.module --language haxe --dependency-path ../greeter-module/bundle --output headers
+spaghetti generate headers --definition src/main/spaghetti/Runner.module --language haxe --dependency-path ../greeter-module/bundle --output headers
 
 echo "[runner-module] Compiling"
-haxe -cp headers -cp src -js Runner.js --macro "include('com.example.runner')"
+haxe -cp headers -cp src/main/haxe -js Runner.js --macro "include('com.example.runner')"
 
 echo "[runner-module] Bundling"
-spaghetti bundle --definition Runner.module --language haxe --source Runner.js --output bundle -d ../greeter-module/bundle/
+spaghetti bundle --definition src/main/spaghetti/Runner.module --language haxe --source Runner.js --output bundle -d ../greeter-module/bundle/
 
 echo "Done with runner-module"
 cd ..

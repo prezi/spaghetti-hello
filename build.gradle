@@ -1,0 +1,52 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath "com.prezi.spaghetti:gradle-spaghetti-typescript-plugin:2.0"
+		classpath "com.prezi.spaghetti:gradle-spaghetti-haxe-plugin:2.0"
+	}
+}
+
+allprojects {
+	apply plugin: "base"
+}
+
+project(":greeter-module") {
+	apply plugin: "spaghetti-typescript"
+}
+
+project(":runner-module") {
+	apply plugin: "spaghetti-haxe"
+
+	haxe {
+		include "com.example.runner"
+	}
+
+	dependencies {
+		modules project(path: ":greeter-module", configuration: "modules")		
+	}	
+}
+
+apply plugin: "spaghetti"
+
+dependencies {
+	modules project(path: ":runner-module", configuration: "modules")		
+}	
+
+task packageApplication(type: com.prezi.spaghetti.gradle.PackageApplication) {
+	mainModule "com.example.runner"
+	execute true
+	type "node"
+}
+
+task run(type: Exec) {
+	dependsOn packageApplication
+	commandLine "node", "${packageApplication.outputDirectory}/application.js"
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion "2.1"
+}

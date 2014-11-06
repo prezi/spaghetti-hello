@@ -1,0 +1,3 @@
+rootProject.name = "spaghetti-hello"
+include "greeter-module"
+include "runner-module"
