@@ -14,6 +14,7 @@
  * TODO pass module dependencies to grunt, so it can resolve the correct task order
  *      right now the calls to spaghettiTaskSet need to be in the correct order (dependency before dependent)
  * TODO generate clean tasks
+ * TODO refactor this into a prototype
  */
 function spaghettiTaskSet(config, opts) {
     var exec, compileCommand = {
