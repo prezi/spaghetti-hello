@@ -149,7 +149,7 @@ Add a `GreeterModuleImpl.ts`:
 
 	```typescript
 	module com.example.greeter {
-	    export class GreeterImpl {
+	    export class GreeterImpl implements Greeter {
 	        sayHello(user:string):string {
 	            return "Hello " + user + "!";
 	        }
