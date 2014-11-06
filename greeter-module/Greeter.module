@@ -1,0 +1,10 @@
+module com.example.greeter
+
+/**
+ * A simple greeter.
+ */
+interface Greeter {
+    string sayHello(string user)
+}
+
+Greeter createGreeter()
