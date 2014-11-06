@@ -16,6 +16,21 @@ A minimal example of TypeScript and Haxe code working together via Spaghetti.
 ```
 git clone https://github.com/prezi/spaghetti-hello
 cd spaghetti-hello
+```
+
+Then you have several options to check out how to use build systems for building.
+
+### Simple shell-script
+
+```
 ./build.sh
 node app/application.js
+```
+
+### Grunt
+
+```
+npm install -g grunt-cli  # If you don't have grunt-cli installed yet
+npm install
+grunt
 ```

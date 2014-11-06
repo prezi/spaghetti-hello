@@ -1,0 +1,7 @@
+{
+    "name": "spaghetti-hello",
+    "version": "0.0.1",
+    "devDependencies": {
+        "grunt-exec": "latest"
+    }
+}
