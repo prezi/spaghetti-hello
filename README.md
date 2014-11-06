@@ -50,6 +50,13 @@ $ node app/application.js
 ```
 $ npm install -g grunt-cli  # If you don't have grunt-cli installed yet
 $ npm install grunt
+$ node app/application.js
+```
+
+#### Gradle
+
+```
+$ ./gradlew run
 ```
 
 Step-by-Step: Hello, World!
